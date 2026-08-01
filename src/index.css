@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Syne", sans-serif;
+  --font-tech: "JetBrains Mono", monospace;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-editorial: "Syne", sans-serif;
+  
+  --color-brand-cyan: #00FFFF; /* Cyber Cyan */
+  --color-brand-gold: #00FFFF;
+  --color-brand-chartreuse: #00FFFF;
+  --color-brand-yellow: #00FFFF;
+  --color-brand-black: #1a1a1a;
+  --color-brand-dark-gray: #1a1a1a;
+  --color-brand-bg: #f8f7f4;
+  
+  --color-stv-bg: #f8f7f4;
+  --color-stv-ink: #1a1a1a;
+  --color-stv-accent: #00ffff;
+  --color-stv-faint: rgba(26, 26, 26, 0.1);
+  --color-stv-muted: rgba(26, 26, 26, 0.6);
+}
+
+/* Set Inter as default body and light theme bg */
+body {
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+  background-color: #f8f7f4;
+}
+
+.dot-grid {
+  background-image: radial-gradient(rgba(250, 204, 21, 0.05) 1.2px, transparent 1.2px);
+  background-size: 40px 40px;
+}
+
+.gold-dot-grid {
+  background-image: radial-gradient(rgba(250, 204, 21, 0.12) 1.2px, transparent 1.2px);
+  background-size: 40px 40px;
+}
+
+/* Custom scrollbar styling for technical workstation */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1b1e;
+  border-left: 2px solid #373a40;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #25262b;
+  border: 1px solid #373a40;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #facc15;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Technical text outline stroke */
+.text-stroke-cyan {
+  -webkit-text-stroke: 1px #E3F804;
+  color: transparent;
+}
+
+.text-stroke-gold {
+  -webkit-text-stroke: 1px #E3F804;
+  color: transparent;
+}
+
+/* Scanning animation line */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.animate-scanline {
+  animation: scanline 6s linear infinite;
+}
+
+/* Brutalist style additions */
+.btn-brutal {
+  border: 3px solid #000000;
+  background-color: #FFFFFF;
+  font-family: "Orbitron", "Inter", sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  transition: all 0.1s ease-in-out;
+  box-shadow: 4px 4px 0px #000000;
+  cursor: pointer;
+}
+
+.btn-brutal:hover {
+  background-color: #E3F804;
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0px #000000;
+}
+
+.btn-brutal:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.btn-filled {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.btn-filled:hover {
+  background-color: #E3F804;
+  color: #000000;
+}
+
+.ind-italic {
+  font-family: "Inter", "Orbitron", sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #004F56; /* Petroleum Blue */
+  transform: skewX(-8deg); /* Industry style inclination */
+  display: inline-block;
+}
+
+.text-petroleum {
+  color: #004F56; /* Petroleum Blue */
+}
+
+.bg-petroleum {
+  background-color: #004F56;
+}
+
+.border-petroleum {
+  border-color: #004F56;
+}
+
+.text-chartreuse {
+  color: #8BFF00; /* Chartreuse Green */
+}
+
+.bg-chartreuse {
+  background-color: #8BFF00;
+}
+
+.border-chartreuse {
+  border-color: #8BFF00;
+}
+
+.text-dark-gray {
+  color: #2D3136; /* Dark Gray */
+}
+
+.bg-dark-gray {
+  background-color: #2D3136;
+}
+
+.grid-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.accent-text {
+  color: #E3F804;
+  text-shadow: 1px 1px 0px #000;
+}
+
+/* Corner bracket frames helper */
+.cyber-corners {
+  position: relative;
+}
+.cyber-corners::before, .cyber-corners::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: rgba(0, 0, 0, 0.4);
+  border-style: solid;
+  pointer-events: none;
+}
+.cyber-corners::before {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+}
+.cyber-corners::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1px 1px 0;
+}
+
+.cyber-corners-gold::before, .cyber-corners-gold::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: #E3F804;
+  border-style: solid;
+  pointer-events: none;
+}
+.cyber-corners-gold::before {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+}
+.cyber-corners-gold::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1px 1px 0;
+}
