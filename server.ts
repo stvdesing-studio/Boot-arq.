@@ -786,8 +786,8 @@ Tu misión principal es entablar una conversación fluida, técnica pero sumamen
 He aquí los bloques de estudio que tienes delante en tiempo real:${themesContext}${crossQueryInstructions}
 
 --------------------------------------------------
-SISTEMA MATEMÁTICO INTEGRADO DE ARÍSTIDES (MATEMÁTICAS REALES):
-¡ALERTA MÁXIMA!: El usuario requiere rigor matemático absoluto. Cuando expliques la física del sistema, debes usar funciones y ecuaciones estructurales verdaderas, con simbología real, unidades precisas y la demostración detallada paso a paso del orden del despeje algebraico. Nunca hables de forma vaga de la resistencia o flexión. Usa siempre las ecuaciones de la simulación que rigen el visor 3D interactivo actual:
+SISTEMA MATEMÁTICO INTEGRADO DE ARÍSTIDES (MATEMÁTICAS REALES Y ORTODOXAS):
+¡ALERTA MÁXIMA!: El usuario requiere rigor matemático absoluto. Tienes PROHIBIDO ESTRICTAMENTE inventar simbología, usar notación poco ortodoxa o inexistente. DEBES ceñirte exclusivamente a la simbología y nomenclatura de ingeniería universal (ISO/ANSI, Mecánica del Continuo y FEA: σ para esfuerzo, ε para deformación, E para Módulo de Young, K para rigidez, FoS para Factor de Seguridad, FDM, etc.). Cuando expliques la física del sistema, debes usar funciones y ecuaciones estructurales verdaderas, con simbología real, unidades precisas y la demostración detallada paso a paso del orden del despeje algebraico. Nunca hables de forma vaga de la resistencia o flexión. Usa siempre las ecuaciones de la simulación que rigen el visor 3D interactivo actual:
 
 1. Ecuación de Deflexión Máxima (Δ, en milímetros [mm]):
    Δ = (0.004 · v_viento² + 10 · P_carga) / (0.25 · E)
@@ -842,6 +842,20 @@ SISTEMA MATEMÁTICO INTEGRADO DE ARÍSTIDES (MATEMÁTICAS REALES):
    Matriz de rigidez lineal de tensegridad (equilibrio global de la red):
    [C^T · Q · C] · x = p_x
    Donde C es la matriz de conectividad nudo-barra, Q es la matriz diagonal de coeficientes de densidad de fuerza q, x es el vector de coordenadas espaciales, y p_x es el vector de fuerzas externas aplicadas (cargas estáticas o viento).
+
+5. Motor Universal de Propagación (Universal Propagation Engine) - Algoritmia Avanzada:
+   No solo somos un motor FEA tradicional; somos una red de propagación. La fuerza, la atención, la luz o la percepción son flujos sobre un grafo.
+   El ciclo algorítmico (Nivel 3 - Desarrollador de motores):
+   1. Álgebra lineal: Manejo de matrices [K], vectores de estado {u}, y extracción de autovalores para modos de vibración.
+   2. Teoría de grafos: C^T y C definen la topología (nodos, aristas, caminos, centralidad).
+   3. Mecánica del continuo: Leyes constitutivas del material (E, σ_fluencia, deformación).
+   4. Método de los Elementos Finitos (FEA): Discretización del problema continuo en subdominios (elementos y nodos) ensamblando la matriz global [K_global] = Σ [k_e].
+   5. Métodos numéricos: Resolución de [K]·{u} = {F} mediante métodos iterativos para grandes sistemas.
+   6. Optimización de la red: Encontrar concentraciones de tensión y redistribuir el flujo.
+   
+   Ecuación General de Propagación en la Red:
+   [K_global] · {u} = {F_externa}
+   Donde cada elemento "e" aporta su matriz de rigidez local [k_e] a la global [K_global].
 
 VALORES DE ENTRADA ACTUALES DE LA SIMULACIÓN ACTIVA:
 - Fuerza de viento actual (v_viento): ${simParams.windForce} km/h

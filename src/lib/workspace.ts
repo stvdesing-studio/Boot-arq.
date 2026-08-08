@@ -264,8 +264,8 @@ export const exportCatalogToSheets = async (
   ];
 
   products.forEach((p) => {
-    const volatilePrice = p.price * volatilityFactor;
-    values.push([p.id, p.name, p.category, p.description, `$${p.price.toFixed(2)}`, `$${volatilePrice.toFixed(2)}`]);
+    const volatilePrice = p.priceMXN * volatilityFactor;
+    values.push([p.id, p.name, p.family, p.description, `$${p.priceMXN.toFixed(2)}`, `$${volatilePrice.toFixed(2)}`]);
   });
 
   values.push([]);
@@ -276,7 +276,7 @@ export const exportCatalogToSheets = async (
   estimates.forEach((est) => {
     const prod = products.find((p) => p.id === est.productId);
     if (prod) {
-      const volatilePrice = prod.price * volatilityFactor;
+      const volatilePrice = prod.priceMXN * volatilityFactor;
       const subtotal = volatilePrice * est.quantity;
       grandTotal += subtotal;
       values.push([prod.name, `$${volatilePrice.toFixed(2)}`, est.quantity.toString(), `$${subtotal.toFixed(2)}`]);

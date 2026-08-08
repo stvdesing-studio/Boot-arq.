@@ -100,15 +100,24 @@ export interface ResearchTheme {
 
 export interface ProductItem {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
+  name: string;             // Nombres y derivados
+  family: string;           // Por familias (ej. Acero Estructural, Tubería, Lámina)
+  description: string;      // Descripción detallada
+  saleFormat: string;       // Formatos de venta (ej. Tramo 6m, Rollo, Pieza, Kg)
+  length: string;           // Longitudes
+  color: string;            // Colores
+  thickness: string;        // Grosores
+  caliber: string;          // Calibres
+  type: string;             // Tipos de (ej. A36, Inoxidable, Galvanizado)
+  specificSize: string;     // Tamaño específico
+  weightKg: number;         // Peso (kg) basado en tablas actuales
+  priceMXN: number;         // Precio exclusivamente en Pesos Mexicanos
 }
 
 export interface EstimationItem {
   productId: string;
   quantity: number;
 }
+
 
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { comprehensiveMaterialsDB } from "./data/materialsDB";
 import {
   STYLE_OPTIONS,
   FINISH_OPTIONS,
@@ -185,7 +186,7 @@ export default function App() {
   // --- Derived Metrics ---
   const totalCostVal = estimates.reduce((total, est) => {
     const prod = products.find((p) => p.id === est.productId);
-    return total + (prod ? (prod.price * volatilityFactor) * est.quantity : 0);
+    return total + (prod ? (prod.priceMXN * volatilityFactor) * est.quantity : 0);
   }, 0);
   const [themeStatusFilter, setThemeStatusFilter] = useState<string>("TODOS");
   const [brainstormingIds, setBrainstormingIds] = useState<string[]>([]);
@@ -249,18 +250,19 @@ export default function App() {
     const savedProducts = localStorage.getItem("stv_catalog_products");
     if (savedProducts) {
       try {
-        setProducts(JSON.parse(savedProducts));
+        const parsed = JSON.parse(savedProducts);
+        // Force refresh if old schema detected
+        if (parsed.length > 0 && parsed[0].family === undefined) {
+          setProducts(comprehensiveMaterialsDB);
+          localStorage.setItem("stv_catalog_products", JSON.stringify(comprehensiveMaterialsDB));
+        } else {
+          setProducts(parsed);
+        }
       } catch (e) {
         console.error(e);
       }
     } else {
-      const initialProducts: ProductItem[] = [
-        { id: "p-1", name: "Cable Tensor de Alta Carga AC-12", category: "Tensegridad", description: "Cable de acero grado aeroespacial para alta tensión lineal.", price: 2400.00 },
-        { id: "p-2", name: "Perno de Alta Resistencia M30", category: "Uniones", description: "Perno estructural roscado para nudos rígidos de alta tracción.", price: 900.00 },
-        { id: "p-3", name: "Placa de Fricción Acero Corten P10", category: "Uniones", description: "Placa deflectora de acero corten tratada contra salinidad extrema.", price: 3600.00 },
-        { id: "p-4", name: "Perfil Tubular de Titanio T-85", category: "Estructuras", description: "Barra cilíndrica de titanio grado 5 para compresión paramétrica.", price: 11000.00 },
-        { id: "p-5", name: "Conector Esférico C-5", category: "Uniones", description: "Conector para distribución de cargas tridimensionales recíprocas.", price: 6400.00 },
-      ];
+      const initialProducts: ProductItem[] = comprehensiveMaterialsDB;
       setProducts(initialProducts);
       localStorage.setItem("stv_catalog_products", JSON.stringify(initialProducts));
     }
@@ -902,12 +904,20 @@ export default function App() {
       } else {
         // Create new catalog product
         productId = `prod-stv-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
-        const newProduct = {
+        const newProduct: ProductItem = {
           id: productId,
           name: mat.name,
           description: mat.description,
-          category: mat.category,
-          price: mat.basePrice,
+          family: mat.category,
+          saleFormat: "Unidad",
+          length: "-",
+          color: "-",
+          thickness: "-",
+          caliber: "-",
+          type: "-",
+          specificSize: "-",
+          weightKg: 0,
+          priceMXN: mat.basePrice,
         };
         updatedProducts.push(newProduct);
       }
@@ -1378,19 +1388,29 @@ export default function App() {
           <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#f8f7f4]">
           
           {/* Monolithic Sticky Header bar */}
-          <header className="border-b-1.5 border-[#1a1a1a] bg-white px-8 py-5 sticky top-0 z-40 flex flex-col md:flex-row items-center justify-between gap-4 select-none">
+          <header 
+            className="border-b-1.5 border-[#1a1a1a] bg-white px-8 py-5 sticky top-0 z-40 flex flex-col md:flex-row items-center justify-between gap-4 select-none"
+            style={{ fontSize: "27px", lineHeight: "41px", color: "#1e1a1a", fontFamily: "Orbitron", fontWeight: "bold", textAlign: "justify" }}
+          >
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setActiveTab("hub_map")}
-                className="flex items-center gap-2 font-display text-[10.5px] font-extrabold tracking-wider text-[#1a1a1a] hover:bg-[#1a1a1a]/5 transition-colors uppercase border-1.5 border-[#1a1a1a] px-4 py-2 bg-transparent cursor-pointer"
+                className="flex items-center gap-2 font-display tracking-wider text-[#1a1a1a] hover:bg-[#1a1a1a]/5 transition-colors uppercase bg-transparent cursor-pointer"
+                style={{ lineHeight: "59px", fontSize: "16.5px", fontFamily: "Orbitron", borderWidth: "2px", borderColor: "#96f12d", paddingLeft: "10px", paddingTop: "9px" }}
               >
                 &larr; PORTAL
               </button>
               <div className="text-left">
-                <p className="text-[9px] font-mono tracking-widest text-[#1a1a1a]/60 uppercase font-bold">
+                <p 
+                  className="font-mono tracking-widest text-[#1a1a1a]/60 uppercase"
+                  style={{ fontFamily: "Orbitron", fontStyle: "italic", lineHeight: "48px", fontSize: "11px" }}
+                >
                   MÓDULO SELECCIONADO
                 </p>
-                <h1 className="text-xl font-display font-extrabold tracking-tight text-[#1a1a1a] uppercase leading-none mt-0.5">
+                <h1 
+                  className="font-display tracking-tight text-[#1a1a1a] uppercase mt-0.5"
+                  style={{ lineHeight: "28px", fontSize: "25px", fontFamily: "Orbitron", fontWeight: "bold", fontStyle: "italic" }}
+                >
                   {activeTab === "themes" ? "RESEARCH INTERFACE // ESTUDIO" :
                    activeTab === "hub" ? "PLANS & COSTS // ESTIMACIONES" :
                    activeTab === "visor" ? "SIMULATION CONSOLE // VECTORES" :
@@ -2802,19 +2822,19 @@ export default function App() {
                           {estimates.map((est) => {
                             const prod = products.find((p) => p.id === est.productId);
                             if (!prod) return null;
-                            const volatilePrice = prod.price * volatilityFactor;
+                            const volatilePrice = prod.priceMXN * volatilityFactor;
                             const subtotal = volatilePrice * est.quantity;
                             return (
                               <div key={est.productId} className="bg-white border-2 border-black p-3 flex justify-between items-center shadow-[2px_2px_0px_#000000] relative group">
                                 <div className="space-y-1">
                                   <span className="bg-black text-[#00ffff] text-[7.5px] font-mono px-1.5 py-0.5 font-bold uppercase tracking-wider">
-                                    {prod.category}
+                                    {prod.family}
                                   </span>
                                   <h5 className="text-[11px] font-black text-black font-display uppercase tracking-wide">
                                     {prod.name}
                                   </h5>
                                   <p className="text-[9.5px] text-black/60 font-mono font-bold uppercase flex flex-col">
-                                    <span>Base: ${prod.price.toFixed(2)} MXN / Unidad</span>
+                                    <span>Base: ${prod.priceMXN.toFixed(2)} MXN / Unidad</span>
                                     <span className="text-black font-black">Ajustado: ${volatilePrice.toFixed(2)} MXN</span>
                                   </p>
                                 </div>
@@ -2896,7 +2916,7 @@ export default function App() {
                             {estimates
                               .reduce((total, est) => {
                                 const prod = products.find((p) => p.id === est.productId);
-                                return total + (prod ? (prod.price * volatilityFactor) * est.quantity : 0);
+                                return total + (prod ? (prod.priceMXN * volatilityFactor) * est.quantity : 0);
                               }, 0)
                               .toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{" "}
                             MXN
@@ -2986,9 +3006,17 @@ export default function App() {
                             const newP: ProductItem = {
                               id: `p-${Date.now()}`,
                               name: newProductName.trim(),
-                              category: newProductCategory,
+                              family: newProductCategory,
                               description: newProductDesc.trim() || "Sin descripción.",
-                              price: priceVal,
+                              saleFormat: "Unidad",
+                              length: "-",
+                              color: "-",
+                              thickness: "-",
+                              caliber: "-",
+                              type: "-",
+                              specificSize: "-",
+                              weightKg: 0,
+                              priceMXN: priceVal,
                             };
                             const updated = [...products, newP];
                             saveProducts(updated);
@@ -3019,23 +3047,23 @@ export default function App() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                       {products.map((prod) => {
-                        const volatilePrice = prod.price * volatilityFactor;
-                        const minEst = prod.price * 0.7;
-                        const maxEst = prod.price * 1.8;
+                        const volatilePrice = prod.priceMXN * volatilityFactor;
+                        const minEst = prod.priceMXN * 0.7;
+                        const maxEst = prod.priceMXN * 1.8;
                         return (
                           <div key={prod.id} className="bg-[#f8f7f4] hover:bg-white border-2 border-black p-3.5 flex flex-col justify-between transition-colors shadow-[2px_2px_0px_#000000] relative group">
                             
                             <div className="space-y-1.5">
                               <div className="flex items-center justify-between">
                                 <span className="bg-black text-[#00ffff] text-[7.5px] font-mono px-1.5 py-0.5 font-black uppercase tracking-wider">
-                                  {prod.category.toUpperCase()}
+                                  {prod.family.toUpperCase()}
                                 </span>
                                 <div className="text-right">
                                   <span className="text-[12px] font-mono font-black text-black block">
                                     ${volatilePrice.toFixed(2)} MXN
                                   </span>
                                   <span className="text-[8px] font-mono font-bold text-gray-400 block">
-                                    Base: ${prod.price.toFixed(2)}
+                                    Base: ${prod.priceMXN.toFixed(2)}
                                   </span>
                                 </div>
                               </div>
@@ -3047,6 +3075,17 @@ export default function App() {
                                 {prod.description}
                               </p>
 
+                              
+                              <div className="grid grid-cols-2 gap-x-2 gap-y-1 py-1 text-[8px] font-mono text-black uppercase border-b-2 border-black/10 pb-2">
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Formato:</span> <span className="font-black">{prod.saleFormat}</span></div>
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Longitud:</span> <span className="font-black">{prod.length}</span></div>
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Grosor:</span> <span className="font-black">{prod.thickness}</span></div>
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Calibre:</span> <span className="font-black">{prod.caliber}</span></div>
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Tipo:</span> <span className="font-black">{prod.type}</span></div>
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Tamaño:</span> <span className="font-black">{prod.specificSize}</span></div>
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Color:</span> <span className="font-black">{prod.color}</span></div>
+                                <div className="flex flex-col"><span className="text-gray-400 font-bold">Peso:</span> <span className="font-black">{prod.weightKg ? prod.weightKg.toFixed(2) : "0.00"} kg</span></div>
+                              </div>
                               {/* Price range indicator to emphasize variability/fluctuation */}
                               <div className="pt-2">
                                 <div className="flex justify-between text-[7.5px] font-mono text-gray-400 font-bold uppercase">
